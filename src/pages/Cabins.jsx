@@ -1,22 +1,20 @@
-import { useEffect } from "react";
 import Heading from "../ui/Heading";
 import Row from "../ui/Row";
-import { getCapins } from "../services/apiCapins";
+import CabinTable from "../features/cabins/CabinTable";
+import { AddCabin } from "../features/cabins/AddCabin";
+import { CapinTableOpreations } from "../features/cabins/CapinTableOpreations";
 
 function Cabins() {
-  useEffect(() => {
-    const getData = async () => {
-    const data = await getCapins();
-    console.log(data)
-  }
-  getData();
-  },[])
-  
   return (
-    <Row type="horizontal">
-      <Heading as="h1">All cabins</Heading>
-      <p>TEST</p>
-    </Row>
+   <>
+     <Row type="horizantal">
+        <Heading as="h1">All cabins</Heading>
+        
+        <CapinTableOpreations/>
+      </Row>
+      <CabinTable/>
+      <AddCabin/>
+   </>
   );
 }
 

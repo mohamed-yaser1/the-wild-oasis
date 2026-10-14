@@ -1,3 +1,4 @@
+import { cloneElement, createContext, useContext, useState,useEffect,useRef } from "react";
 import styled from "styled-components";
 
 const StyledModal = styled.div`
@@ -48,3 +49,72 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
+
+
+// const Modal = ({children,closeModal}) => {
+//   return (
+//     <Overlay>
+//       <StyledModal>
+//         <Button onClick={()=>closeModal()}>X</Button>
+//         {children}
+//       </StyledModal>
+//     </Overlay>
+//   )
+// }
+const ModalContext = createContext()
+
+function Modal({children}){
+
+  const [openName,setOpenName] = useState("");
+  const close = () => setOpenName("");
+  const open = (x) => setOpenName(x);
+
+  return <ModalContext.Provider value={{open,close,openName}} >
+    {children}
+  </ModalContext.Provider>
+}
+
+Modal.Open = function Open({children,opens}){
+  const {open} = useContext(ModalContext);
+
+  return cloneElement(children,{onClick:()=>open(opens)});
+}
+
+Modal.Window = function Window({children , name}){
+  const {openName , close} = useContext(ModalContext)
+  const ref = useRef();
+
+  useEffect(() =>{
+
+    function handleClick(e){
+      if(ref.current && !ref.current.contains(e.target)){
+        console.log('outside');
+        close();
+      }
+      
+    }
+    document.addEventListener('click',handleClick,true);
+
+    return () => document.removeEventListener('click',handleClick,true)
+  } ,[close])
+
+
+  if(openName !== name) return null;
+  return(
+      <Overlay>
+        <StyledModal ref={ref}>
+        <Button onClick={close}>X</Button>
+          <div>
+            {
+              cloneElement(children,{closeModal:close})
+            }
+          </div>
+        </StyledModal>
+      </Overlay>
+  )
+}
+
+export default Modal
+
+
+

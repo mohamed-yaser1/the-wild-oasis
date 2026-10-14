@@ -6,7 +6,13 @@ import Table from "../../ui/Table";
 
 import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
+import { useNavigate } from "react-router-dom";
 
+const StyledButton =styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 30px;
+`
 const Cabin = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
@@ -48,8 +54,11 @@ function BookingRow({
     cabins: { name: cabinName },
   },
 }) {
+
+  const navigate = useNavigate();
+
   const statusToTagName = {
-    unconfirmed: "blue",
+    "unconfirmed": "blue",
     "checked-in": "green",
     "checked-out": "silver",
   };
@@ -77,8 +86,8 @@ function BookingRow({
       </Stacked>
 
       <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
-
       <Amount>{formatCurrency(totalPrice)}</Amount>
+            <StyledButton onClick={()=>navigate(`/bookings/${bookingId}`)}>:</StyledButton>
     </Table.Row>
   );
 }

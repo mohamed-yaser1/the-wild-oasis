@@ -2,17 +2,29 @@ import { useState } from "react";
 import Button from "../../ui/Button";
 import Form from "../../ui/Form";
 import Input from "../../ui/Input";
-import FormRowVertical from "../../ui/FormRowVertical";
+import FormRow from "../../ui/FormRow";
+// import Spinner from "../../ui/Spinner";
+import { useLogin } from "./useLogin";
 
 function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  
+  const [email, setEmail] = useState("mo@gmail.com");
+  const [password, setPassword] = useState("123456789");
+  const {login,isPending} = useLogin();
 
-  function handleSubmit() {}
+  function handleSubmit(e) {
+    e.preventDefault();
+    login({email,password},{
+      onSettled:()=>{
+        setPassword("");
+        setEmail("");
+      }
+    })
+  }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <FormRowVertical label="Email address">
+    <Form onSubmit={handleSubmit} >
+      <FormRow label="Email address">
         <Input
           type="email"
           id="email"
@@ -20,20 +32,22 @@ function LoginForm() {
           autoComplete="username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          disabled={isPending}
         />
-      </FormRowVertical>
-      <FormRowVertical label="Password">
+      </FormRow>
+      <FormRow label="Password">
         <Input
           type="password"
           id="password"
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          disabled={isPending}
         />
-      </FormRowVertical>
-      <FormRowVertical>
-        <Button size="large">Login</Button>
-      </FormRowVertical>
+      </FormRow>
+      <FormRow>
+        <Button size="large" variation="primary">Log In</Button>
+      </FormRow>
     </Form>
   );
 }
